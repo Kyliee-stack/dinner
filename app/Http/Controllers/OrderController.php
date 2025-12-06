@@ -78,7 +78,7 @@ class OrderController extends Controller
             $grandTotal = $subtotal; 
             
             $order = Order::create([
-                'order_number' => 'GACOAN-' . time(),
+                'order_number' => 'MANTAN-' . time(),
                 
                 // Menggunakan input() dengan fallback ke 'Pelanggan Anonim'
                 'nama_pelanggan' => $request->input('nama_pelanggan', 'Pelanggan Anonim'),
