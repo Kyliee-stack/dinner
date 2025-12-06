@@ -99,9 +99,9 @@
 @csrf
 
 
-<label for="customer_name">Nama Pelanggan</label>
-<input type="text" name="customer_name" id="customer_name"
-class="form-control" value="{{ old('customer_name') }}" required>
+<label for="nama_pelanggan">Nama Pelanggan</label>
+<input type="text" name="nama_pelanggan" id="nama_pelanggan"
+class="form-control" value="{{ old('nama_pelanggan') }}" required>
 
 
 <label for="nomor_hp">Nomor HP</label>

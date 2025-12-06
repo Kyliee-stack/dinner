@@ -19,13 +19,13 @@
         <label>Filter Status:</label>
         @foreach ($statuses as $status)
             <a href="{{ route('admin.orders.index', ['status' => $status]) }}" 
-               class="btn-filter {{ $currentStatus === $status ? 'active' : '' }}"
+                class="btn-filter {{ $currentStatus === $status ? 'active' : '' }}"
             >
                 {{ $status }}
             </a>
         @endforeach
         <a href="{{ route('admin.orders.index', ['status' => 'Semua']) }}" 
-           class="btn-filter {{ $currentStatus === 'Semua' ? 'active' : '' }}"
+            class="btn-filter {{ $currentStatus === 'Semua' ? 'active' : '' }}"
         >
             Semua
         </a>
@@ -54,12 +54,13 @@
                 {{-- Sorot baris jika status 'Menunggu Konfirmasi' --}}
                 <tr class="{{ $order->status === 'Menunggu Konfirmasi' ? 'row-pending' : '' }}"> 
                     <td><strong>#{{ $order->order_number }}</strong></td>
-                    <td>{{ $order->customer_name }}</td>
+                    <td>{{ $order->nama_pelanggan }}</td> {{-- Pastikan menggunakan nama_pelanggan --}}
                     <td>{{ $order->order_type }}</td>
                     <td>Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
                     <td><span class="badge-payment">{{ $order->payment_method }}</span></td>
                     <td>
-                        <span class="status-badge {{ str_slug($order->status, '-') }}">
+                        {{-- PERBAIKAN: Mengganti str_slug() dengan Illuminate\Support\Str::slug() --}}
+                        <span class="status-badge {{ Illuminate\Support\Str::slug($order->status, '-') }}">
                             {{ $order->status }}
                         </span>
                     </td>
@@ -127,7 +128,7 @@
     font-weight: 700;
     display: inline-block;
 }
-/* Warna Badge Status */
+/* Warna Badge Status - Pastikan ini cocok dengan hasil slug: contoh "menunggu-konfirmasi" */
 .menunggu-konfirmasi { background-color: #ffc107; color: #333; } /* Kuning */
 .dikonfirmasi { background-color: #17a2b8; } /* Biru Muda */
 .diproses { background-color: #007bff; } /* Biru */
