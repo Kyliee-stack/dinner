@@ -15,6 +15,7 @@ class OrderItem extends Model
         'menu_id',
         'nama_menu',
         'qty',
+        'quantity',
         'harga_satuan',
         'subtotal',
     ];
