@@ -36,31 +36,33 @@ class OrderController extends Controller
     }
 
     // Memproses checkout (menyimpan pesanan ke database)
+    // Memproses checkout (menyimpan pesanan ke database)
+    // Memproses checkout (menyimpan pesanan ke database)
     public function processCheckout(Request $request)
     {
-        $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
+        // PERBAIKAN: Gunakan 'nullable' untuk kolom opsional
+        $request->validate([
+            'nama_pelanggan' => 'nullable|string|max:255', 
             'order_type' => 'required|in:Dine-In,Take-Away',
             'payment_method' => 'required|in:Tunai,Transfer Bank',
             'notes' => 'nullable|string|max:500',
+            'nomor_meja' => 'nullable|integer|min:0', // Pastikan ini juga nullable jika opsional
         ]);
 
         $cart = session()->get('cart', []);
-        // Normalisasi: pastikan setiap item punya key 'quantity' untuk kompatibilitas
-$normalizedCart = [];
-foreach ($cart as $k => $it) {
-    // jika ada 'qty' tapi tidak ada 'quantity', salin nilainya
-    if (!isset($it['quantity']) && isset($it['qty'])) {
-        $it['quantity'] = $it['qty'];
-    }
-    // juga pastikan ada 'qty' jika kode lain butuhnya
-    if (!isset($it['qty']) && isset($it['quantity'])) {
-        $it['qty'] = $it['quantity'];
-    }
-    $normalizedCart[$k] = $it;
-}
-// gunakan $normalizedCart untuk semua perhitungan selanjutnya
-$cart = $normalizedCart;
+        
+        // Normalisasi cart (biarkan tetap)
+        $normalizedCart = [];
+        foreach ($cart as $k => $it) {
+            if (!isset($it['quantity']) && isset($it['qty'])) {
+                $it['quantity'] = $it['qty'];
+            }
+            if (!isset($it['qty']) && isset($it['quantity'])) {
+                $it['qty'] = $it['quantity'];
+            }
+            $normalizedCart[$k] = $it;
+        }
+        $cart = $normalizedCart;
 
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Keranjang kosong. Proses checkout dibatalkan.');
@@ -69,50 +71,62 @@ $cart = $normalizedCart;
         try {
             DB::beginTransaction();
 
-            // Hitung total harga
-            $totalHarga = collect($cart)->sum(fn($item) => $item['quantity'] * $item['price']);
-            $grandTotal = $totalHarga; // Total tanpa diskon/pajak
+            $subtotal = collect($cart)->sum(fn($item) => $item['quantity'] * $item['price']);
+            $grandTotal = $subtotal; 
             
+            // Perhatikan penggunaan $request->input() dengan nilai default untuk mencegah error Undefined Key
             $order = Order::create([
                 'order_number' => 'GACOAN-' . time(),
-                'customer_name' => $validated['customer_name'],
-                'order_type' => $validated['order_type'],
-                // Status awal: Menunggu Konfirmasi (untuk Admin/Pembayaran)
+                
+                // FIX UTAMA: Menggunakan input() dengan fallback ke 'Pelanggan Anonim' 
+                'nama_pelanggan' => $request->input('nama_pelanggan', 'Pelanggan Anonim'),
+                
+                // Menggunakan input() dengan fallback ke 0 (sesuai DB default)
+                'nomor_meja' => $request->input('nomor_meja', 0), 
+                
+                'order_type' => $request->input('order_type'),
                 'status' => 'Menunggu Konfirmasi', 
-                'payment_method' => $validated['payment_method'],
-                'total_harga' => $totalHarga,
-                'grand_total' => $grandTotal,
-                'discount' => 0,
-                'notes' => $validated['notes'],
+                'payment_method' => $request->input('payment_method'),
+                
+                'subtotal' => $subtotal, 
+                'total' => $grandTotal, 
+                'grand_total' => $grandTotal, 
+                
+                'discount' => $request->input('discount', 0),
+                'biaya_lainnya' => $request->input('biaya_lainnya', 0), 
+                
+                // Menggunakan input() dengan fallback untuk notes juga
+                'notes' => $request->input('notes', null), 
             ]);
 
             // Simpan detail item pesanan
-            foreach ($cart as $id => $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'menu_id' => $id,
-                    'menu_name' => $item['name'],
-                    'price_at_order' => $item['price'],
-                    'quantity' => $item['quantity'],
-                    'subtotal' => $item['quantity'] * $item['price'],
-                    'notes' => $item['notes'] ?? null,
-                ]);
-            }
+          // Simpan detail item pesanan
+foreach ($cart as $id => $item) {
+    OrderItem::create([
+        'order_id' => $order->id,
+        'menu_id' => $id,
+        
+        // FIX: Tambahkan menu_name (sesuai pesan error 'nama_menu')
+        'nama_menu' => $item['name'], // Kita ambil dari data item keranjang
+        
+        'harga_satuan' => $item['price'],
+        'qty' => $item['quantity'],
+        'subtotal' => $item['quantity'] * $item['price'],
+        'notes' => $item['notes'] ?? null,
+    ]);
+}
 
-            // Kosongkan keranjang
             session()->forget('cart');
-
             DB::commit();
-
-            // Redirect ke halaman menunggu konfirmasi
             return redirect()->route('order.waiting', $order->order_number);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log error
+            Log::error("Error saat memproses checkout: " . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pesanan: ' . $e->getMessage());
         }
     }
+         
 
     // Halaman menunggu konfirmasi pembayaran/pesanan
     public function waiting($order_number)
