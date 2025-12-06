@@ -1,0 +1,380 @@
+/* --- GLOBAL STYLING & FONT --- */
+body {
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif; /* Menggunakan Poppins untuk kesan modern */
+    background: #f4f4f4;
+    color: #333; /* Warna teks standar */
+}
+
+/* Warna Pink Utama */
+:root {
+    --color-primary: #ff3366; /* Pink cerah utama */
+    --color-secondary: #f7b4c6; /* Pink muda untuk highlight */
+    --color-dark: #1a1a1a;
+}
+
+/* --- TOMBOL DAN INTERAKSI --- */
+button {
+    background: var(--color-primary); 
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover {
+    background: #e62e5c; /* Sedikit lebih gelap saat hover */
+}
+.btn-secondary {
+    background: white;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+/* --- NAVBAR (Header Utama) --- */
+.navbar {
+    background: white;
+    color: var(--color-dark);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.navbar-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.navbar-icons {
+    display: flex;
+    gap: 15px;
+    font-size: 1.2em;
+}
+
+/* --- LAYOUT 2 KOLOM (Page Wrapper) --- */
+.page-wrapper {
+    max-width: 1300px; 
+    margin: 20px auto; 
+    padding: 0 20px;
+    display: flex; 
+    gap: 25px;
+}
+
+.kolom-kiri {
+    flex: 2; /* Kolom untuk daftar menu (lebih lebar) */
+}
+
+.kolom-kanan {
+    flex: 1; /* Kolom untuk rincian pembayaran (sticky) */
+    background-color: white; 
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    height: fit-content; 
+    position: sticky; 
+    top: 20px;
+    min-width: 300px;
+}
+
+/* --- TAB MENU NAVIGASI (HEAD MENU) --- */
+.tab-navigation {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+.tab-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+.tab-item.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* --- CARD MENU (MIE, DIMSUM) --- */
+.menu-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+/* --- CARD MENU (MIE, DIMSUM) --- */
+
+.card {
+    width: calc(50% - 10px); 
+    min-width: 250px;
+    /* HAPUS: position: relative; */ 
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+    /* position: relative; <-- HAPUS BARIS INI */ 
+}
+
+.card-img {
+    width: 100%;
+    height: 140px; 
+    object-fit: cover;
+}
+.card-content {
+    /* Tambah padding di bawah agar ada ruang */
+    padding: 15px; 
+}
+.price {
+    font-weight: bold;
+    margin: 5px 0 10px 0;
+    color: var(--color-primary);
+}
+
+/* KONTROL QUANTITY di CARD (FIXED USING FLEXBOX) */
+.card-footer-control { 
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Taruh tombol di kanan */
+    width: 100%; 
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #eee; /* Garis pemisah tipis */
+}
+.qty-btn {
+    /* Tetap sama: bundar, pink, putih */
+    width: 30px; /* Sedikit lebih besar */
+    height: 30px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-primary);
+}
+/* Mengubah warna agar mirip screenshot (minus = border pink, plus = solid pink) */
+.qty-btn.minus-btn {
+    background: white; 
+    color: var(--color-primary); 
+}
+.qty-btn.plus-btn {
+    background: var(--color-primary); 
+    color: white;
+}
+.qty-value {
+    font-weight: bold;
+    color: var(--color-dark); /* Ganti ke warna gelap agar kontras */
+    padding: 0 15px; /* Jarak antara tombol */
+}
+.qty-btn:hover {
+    border-color: var(--color-primary);
+}
+
+/* --- KERANJANG MINI (BOTTOM BAR) --- */
+.bottom-bar {
+    position: fixed;
+    bottom: -80px; /* Posisi awal tersembunyi */
+    left: 0;
+    width: 100%;
+    background: var(--color-primary); 
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s ease;
+    z-index: 999;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+}
+.bottom-bar.active {
+    bottom: 0; /* Tampilkan */
+}
+.cart-total-info {
+    color: white;
+    text-align: left;
+}
+.checkout-btn-bar {
+    background: white; 
+    color: var(--color-primary); 
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+/* --- RINCIAN PEMBAYARAN DI KOLOM KANAN (CHECKOUT DETAIL) --- */
+.rincian-judul {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.cart-item-detail {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.item-qty-info {
+    font-size: 0.9em;
+    color: #666;
+}
+.rincian-harga {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+.harga-baris {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+.harga-baris.total {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+.checkout-action-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background: var(--color-primary);
+    border-radius: 30px;
+    font-size: 1.1em;
+}
+
+/* --- FORM PEMBAYARAN / DETAIL INPUT (Screenshot 2) --- */
+.pembayaran-form-container {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+}
+.pembayaran-form-container label {
+    display: block;
+    font-weight: 500;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+.pembayaran-form-container input[type="text"], 
+.pembayaran-form-container input[type="email"],
+.pembayaran-form-container input[type="tel"] {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.input-with-icon {
+    position: relative;
+}
+.input-with-icon input {
+    padding-left: 35px; /* Memberi ruang untuk ikon */
+}
+.input-with-icon::before {
+    content: attr(data-icon);
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-primary);
+}
+.tipe-pemesanan {
+    background: var(--color-secondary);
+    color: var(--color-dark);
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid var(--color-primary);
+}
+.promo-section {
+    color: var(--color-primary);
+    font-weight: bold;
+    cursor: pointer;
+    margin: 20px 0;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- CART PAGE SPECIFIC STYLES --- */
+.cart-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    color: var(--color-dark);
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.cart-item {
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+.cart-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+.cart-info {
+    flex: 1;
+}
+
+/* RESPONSIVENESS */
+@media (max-width: 900px) {
+   .page-wrapper {
+    max-width: 1300px; 
+    margin: 20px auto; 
+    padding: 0 20px;
+    display: flex; 
+    gap: 25px;
+}
+    .kolom-kanan {
+        position: static; /* Hilangkan sticky di mobile */
+        width: 100%;
+        min-width: unset;
+        margin-top: 0;
+    }
+    .kolom-kiri {
+    /* Gunakan flex: 2; atau atur width maksimal, sesuaikan jika Anda hapus kolom kanan */
+    flex: 2; 
+    min-width: 60%; /* Tambahkan ini agar tidak terlalu menyusut */
+    .card {
+        width: 100%; /* Kartu menu menjadi 1 kolom penuh di mobile */
+        max-width: unset;
+    }
+}
+

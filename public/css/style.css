@@ -1,0 +1,439 @@
+/* --- GLOBAL STYLING & FONT --- */
+body {
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif; /* Mengganti font yang lebih modern */
+    background: #f4f4f4;
+    color: #333; /* Warna teks standar */
+}
+
+/* Warna Pink Utama */
+:root {
+    --color-primary: #ff3366; 
+    --color-secondary: #f7b4c6; /* Pink muda untuk highlight */
+    --color-dark: #1a1a1a;
+}
+
+/* --- TOMBOL DAN INTERAKSI --- */
+button {
+    /* Tombol default diubah ke pink */
+    background: var(--color-primary); 
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover {
+    background: #e62e5c; /* Sedikit lebih gelap saat hover */
+}
+.btn-secondary {
+    background: white;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+/* --- NAVBAR (Header Utama) --- */
+.navbar {
+    background: white; /* Header Mie Gacoan biasanya putih */
+    color: var(--color-dark);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.navbar-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.navbar-icons {
+    display: flex;
+    gap: 15px;
+    font-size: 1.2em;
+}
+
+/* --- LAYOUT 2 KOLOM (Page Wrapper) --- */
+.page-wrapper {
+    max-width: 1300px; 
+    margin: 20px auto; 
+    padding: 0 20px;
+    display: flex; 
+    gap: 25px;
+}
+
+.kolom-kiri {
+    flex: 2; /* Kolom untuk daftar menu */
+}
+
+.kolom-kanan {
+    flex: 1; /* Kolom untuk rincian pembayaran */
+    background-color: white; 
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    height: fit-content; 
+    position: sticky; 
+    top: 20px;
+    min-width: 300px;
+}
+
+/* --- TAB MENU NAVIGASI (DINE IN, DIMSUN, ETC.) --- */
+.tab-navigation {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+.tab-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+.tab-item.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* --- CARD MENU (MIE GACOAN, MIE HOMPIMPA) --- */
+.menu-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.card {
+    background: white;
+    border-radius: 8px;
+    width: 48%; /* Menyesuaikan agar 2 item per baris */
+    min-width: 250px;
+    padding: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+.card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+.card-content {
+    padding: 15px;
+}
+.price {
+    font-weight: bold;
+    margin: 5px 0 10px 0;
+    color: var(--color-primary);
+}
+
+/* KONTROL QUANTITY di CARD */
+.qty-control-card { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.qty-btn {
+    background: none;
+    border: 1px solid #ccc;
+    color: var(--color-dark);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1;
+}
+.qty-btn:hover {
+    border-color: var(--color-primary);
+}
+
+/* --- KERANJANG MINI (Bottom Bar) --- */
+.bottom-bar {
+    position: fixed;
+    bottom: -80px; 
+    left: 0;
+    width: 100%;
+    background: var(--color-primary); /* Ubah ke Pink */
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s ease;
+    z-index: 999;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+.bottom-bar.active {
+    bottom: 0;
+}
+.cart-total-info {
+    color: white;
+    text-align: left;
+}
+.checkout-btn-bar {
+    background: white; /* Tombol checkout di bar bawah */
+    color: var(--color-primary); 
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 25px;
+}
+
+/* --- RINCIAN PEMBAYARAN DI KOLOM KANAN (SCREENSHOT 1 & 2) --- */
+.rincian-judul {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Item yang dipesan (Detail di Kolom Kanan) */
+.cart-item-detail {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.item-qty-info {
+    font-size: 0.9em;
+    color: #666;
+}
+.edit-btn {
+    font-size: 0.8em;
+    background: none;
+    color: #666;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Rincian Harga */
+.rincian-harga {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+.harga-baris {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+.harga-baris.total {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.checkout-action-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background: var(--color-primary);
+    border-radius: 30px;
+    font-size: 1.1em;
+}
+/* Tombol checkout di keranjang bawah */
+.cart-bottom button {
+    background: white; 
+    color: var(--color-primary);
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 25px;
+}
+
+/* --- MODAL/HALAMAN PEMBAYARAN (SCREENSHOT 3) --- */
+.pembayaran-form {
+    padding-top: 20px;
+}
+.pembayaran-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.pembayaran-form input[type="text"], 
+.pembayaran-form input[type="email"],
+.pembayaran-form input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.tipe-pemesanan {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.promo-section {
+    color: var(--color-primary);
+    font-weight: bold;
+    cursor: pointer;
+    margin: 20px 0;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+/* Styling Khusus Halaman Login */
+.login-body {
+    background-color: var(--color-bg-light); /* Latar belakang terang */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h2 {
+    color: var(--color-primary); /* Merah Gacoan */
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+.login-container .form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+/* Menggunakan gaya input form yang sudah ada */
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.login-container .btn-login {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+.login-container .btn-login:hover {
+    background-color: #d13030;
+}
+
+.login-footer {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #888;
+}
+.login-footer a {
+    color: var(--color-secondary);
+}
+
+/* Styling Khusus Detail Pesanan */
+
+.order-detail-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.detail-header h3 {
+    color: var(--color-text-dark);
+}
+
+.card-grid {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.detail-card {
+    flex: 1;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    padding: 15px;
+}
+
+.detail-card h4 {
+    color: var(--color-secondary);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.detail-card p {
+    margin: 5px 0;
+}
+
+/* Item List Table */
+.item-list-section table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.item-list-section table tfoot td {
+    border-top: 2px solid #ccc;
+}
+
+/* Update Status Section */
+.update-status-section {
+    background-color: var(--color-bg-light);
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 30px;
+}
+
+.update-status-section h4 {
+    margin-bottom: 15px;
+    color: var(--color-text-dark);
+}
+
+/* Alert Sukses */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+    font-weight: 600;
+}
+.alert-success i {
+    margin-right: 8px;
+}
