@@ -17,7 +17,7 @@
             --color-text-sidebar: #ced4da;
             --color-active-bg: #495057;
         }
-        /* ... (Semua CSS Anda yang lain di sini) ... */
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--color-secondary);
@@ -157,9 +157,10 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-250px);
-                position: fixed;
+                position: fixed; /* Tetap fixed agar tidak hilang saat scroll */
                 top: 0;
                 left: 0;
+                /* Overlay untuk menutup konten saat sidebar terbuka */
             }
             .sidebar.open {
                 transform: translateX(0);
@@ -172,6 +173,7 @@
                 display: block; /* Tampilkan di mobile/tablet */
             }
             .header {
+                /* Atur agar hamburger menu terlihat di kiri */
                 justify-content: flex-start;
             }
             .header h1 {
@@ -296,7 +298,7 @@
             align-items: center;
         }
         .btn-secondary {
-            background-color: #6c757d;
+             background-color: #6c757d;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -315,6 +317,7 @@
             font-size: 0.9rem;
             margin-top: 5px;
         }
+
     </style>
 </head>
 <body>
@@ -327,6 +330,7 @@
 
         <ul class="sidebar-nav">
             <li>
+                {{-- Cek apakah route saat ini adalah dashboard, gunakan class 'active' --}}
                 <a href="{{ route('admin.dashboard') }}" 
                    class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -339,6 +343,7 @@
                 </a>
             </li>
             <li>
+                {{-- Asumsi ada route 'admin.menus.index' untuk Menu --}}
                 <a href="{{ route('admin.menus.index') }}" 
                    class="{{ request()->routeIs('admin.menus.*') ? 'active' : '' }}">
                     <i class="fas fa-utensils"></i> Menu
@@ -371,6 +376,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <h1>@yield('page_title', 'Admin Panel')</h1>
+            {{-- Tambahkan info user admin di sini jika perlu --}}
         </header>
 
         {{-- KONTEN UTAMA --}}
@@ -379,9 +385,6 @@
         </main>
     </div>
 
-    {{-- ELEMEN AUDIO YANG DISEMBUNYIKAN (DIJAMIN HANYA ADA SATU) --}}
-    <audio id="notificationSound" src="{{ asset('audio/notif.mp3') }}" preload="auto" style="display: none;"></audio>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
@@ -399,35 +402,12 @@
             if (window.innerWidth <= 992) {
                 mainContent.addEventListener('click', function() {
                     if (sidebar.classList.contains('open')) {
-                        sidebar.classList.remove('open');
+                         sidebar.classList.remove('open');
                     }
                 });
             }
-            
-            // ------------------------------------------------------------------
-            // >>> KODE NOTIFIKASI SUARA REAL-TIME (Sudah digabung) <<<
-            // ------------------------------------------------------------------
-            const audio = document.getElementById('notificationSound');
-
-            if (window.Echo) {
-                window.Echo.private('orders')
-                    .listen('OrderPlaced', (e) => {
-                        console.log('🚨 Pesanan Baru Masuk:', e);
-                        
-                        // Memicu pemutaran audio
-                        audio.play().then(() => {
-                            console.log('Suara notifikasi diputar.');
-                        }).catch(error => {
-                            console.warn('Gagal memutar suara (diblokir oleh browser):', error);
-                            
-                            if (error.name === 'NotAllowedError') {
-                                // Tampilkan peringatan jika diblokir oleh kebijakan Autoplay browser
-                                alert('🔔 Notifikasi Suara diblokir. Klik di mana saja di halaman ini agar suara notifikasi berikutnya dapat berbunyi.');
-                            }
-                        });
-                    });
-            }
         });
     </script>
+
 </body>
 </html>
