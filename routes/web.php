@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\InventoryController;
+use Illuminate\Support\Facades\Broadcast;
 
 // =========================================================================================
 // FIX UNTUK ERROR 'Route [login] not defined.'
@@ -99,4 +100,9 @@ Route::middleware(['auth', 'is.admin'])->prefix('admin')->group(function () {
         'update' => 'admin.inventories.update',
         'destroy' => 'admin.inventories.destroy',
     ]);
+});
+
+Broadcast::channel('orders', function ($user) {
+    // Asumsi: Admin memiliki kolom/method 'is_admin' atau 'isAdmin()'
+    return $user && $user->is_admin; 
 });
