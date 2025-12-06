@@ -8,6 +8,9 @@ use App\Models\Inventory; // Tambahkan import Model Inventory
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log; // Tambahkan import Log
+// TAMBAHKAN DUA BARIS INI
+use App\Events\OrderPlaced; // Pastikan Event ini sudah dibuat
+use Illuminate\Support\Facades\Auth; // Jika Anda menggunakan private channel
 
 class OrderController extends Controller
 {
@@ -39,7 +42,7 @@ class OrderController extends Controller
     // Memproses checkout (menyimpan pesanan ke database)
     // Memproses checkout (menyimpan pesanan ke database)
     public function processCheckout(Request $request)
-    {
+{
         // PERBAIKAN: Gunakan 'nullable' untuk kolom opsional
         $request->validate([
             'nama_pelanggan' => 'nullable|string|max:255', 
@@ -51,7 +54,7 @@ class OrderController extends Controller
 
         $cart = session()->get('cart', []);
         
-        // Normalisasi cart (biarkan tetap)
+        // Normalisasi cart
         $normalizedCart = [];
         foreach ($cart as $k => $it) {
             if (!isset($it['quantity']) && isset($it['qty'])) {
@@ -74,14 +77,12 @@ class OrderController extends Controller
             $subtotal = collect($cart)->sum(fn($item) => $item['quantity'] * $item['price']);
             $grandTotal = $subtotal; 
             
-            // Perhatikan penggunaan $request->input() dengan nilai default untuk mencegah error Undefined Key
             $order = Order::create([
                 'order_number' => 'GACOAN-' . time(),
                 
-                // FIX UTAMA: Menggunakan input() dengan fallback ke 'Pelanggan Anonim' 
+                // Menggunakan input() dengan fallback ke 'Pelanggan Anonim'
                 'nama_pelanggan' => $request->input('nama_pelanggan', 'Pelanggan Anonim'),
                 
-                // Menggunakan input() dengan fallback ke 0 (sesuai DB default)
                 'nomor_meja' => $request->input('nomor_meja', 0), 
                 
                 'order_type' => $request->input('order_type'),
@@ -95,28 +96,30 @@ class OrderController extends Controller
                 'discount' => $request->input('discount', 0),
                 'biaya_lainnya' => $request->input('biaya_lainnya', 0), 
                 
-                // Menggunakan input() dengan fallback untuk notes juga
                 'notes' => $request->input('notes', null), 
             ]);
 
             // Simpan detail item pesanan
-          // Simpan detail item pesanan
-foreach ($cart as $id => $item) {
-    OrderItem::create([
-        'order_id' => $order->id,
-        'menu_id' => $id,
-        
-        // FIX: Tambahkan menu_name (sesuai pesan error 'nama_menu')
-        'nama_menu' => $item['name'], // Kita ambil dari data item keranjang
-        
-        'harga_satuan' => $item['price'],
-        'qty' => $item['quantity'],
-        'subtotal' => $item['quantity'] * $item['price'],
-        'notes' => $item['notes'] ?? null,
-    ]);
-}
+            foreach ($cart as $id => $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'menu_id' => $id,
+                    
+                    'nama_menu' => $item['name'], 
+                    
+                    'harga_satuan' => $item['price'],
+                    'qty' => $item['quantity'],
+                    'subtotal' => $item['quantity'] * $item['price'],
+                    'notes' => $item['notes'] ?? null,
+                ]);
+            }
 
             session()->forget('cart');
+            
+            // >>> PICU EVENT NOTIFIKASI REAL-TIME <<<
+            // Ini akan mengirim sinyal ke Admin Panel
+            broadcast(new OrderPlaced($order))->toOthers();
+            
             DB::commit();
             return redirect()->route('order.waiting', $order->order_number);
 
@@ -126,7 +129,7 @@ foreach ($cart as $id => $item) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pesanan: ' . $e->getMessage());
         }
     }
-         
+
 
     // Halaman menunggu konfirmasi pembayaran/pesanan
     public function waiting($order_number)
